@@ -1,0 +1,337 @@
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Host: 127.0.0.1
+-- Generation Time: Sep 29, 2026 at 07:44 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `hotelmaps_system`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `bookings`
+--
+
+CREATE TABLE `bookings` (
+  `booking_id` varchar(64) NOT NULL,
+  `hotel_id` varchar(64) NOT NULL,
+  `session_id` varchar(128) DEFAULT NULL,
+  `user_id` varchar(64) DEFAULT NULL,
+  `room_id` varchar(64) DEFAULT NULL,
+  `hotel_title` varchar(255) NOT NULL,
+  `room_name` varchar(255) DEFAULT 'Deluxe King Room',
+  `room_number` varchar(30) NOT NULL DEFAULT '',
+  `guest_name` varchar(120) NOT NULL,
+  `guest_email` varchar(191) DEFAULT NULL,
+  `guest_phone` varchar(50) NOT NULL,
+  `stay_type` varchar(60) NOT NULL,
+  `check_in_time` datetime NOT NULL,
+  `nights` int(11) DEFAULT 1,
+  `amount` decimal(10,2) NOT NULL,
+  `status` varchar(30) DEFAULT 'CONFIRMED',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `bookings`
+--
+
+INSERT INTO `bookings` (`booking_id`, `hotel_id`, `session_id`, `user_id`, `room_id`, `hotel_title`, `room_name`, `room_number`, `guest_name`, `guest_email`, `guest_phone`, `stay_type`, `check_in_time`, `nights`, `amount`, `status`, `created_at`) VALUES
+('BK-3773', 'stay_001', '01fv15vpg7mluouu4c2b1ku0iq', NULL, 'rm_001_1', 'The Manila Hotel', 'Grand Presidential Suite', '1001', 'Agent Tester', 'guest@comfortvue.ph', '+639171234567', 'Nightly', '2026-10-01 14:00:00', 2, 25000.00, 'CONFIRMED', '2026-09-29 17:34:56'),
+('BK-5472', 'stay_001', 'n9ohr7iee821lfmerkrq910hh7', NULL, 'rm_001_1', 'The Manila Hotel', 'Grand Presidential Suite', '1001', 'Agent Tester', 'guest@comfortvue.ph', '+639171234567', 'Nightly', '2026-10-01 14:00:00', 2, 25000.00, 'CONFIRMED', '2026-09-29 17:36:46');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `hotels`
+--
+
+CREATE TABLE `hotels` (
+  `id` varchar(64) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `brand` varchar(100) DEFAULT 'Luxury 5-Star Hotel',
+  `category` enum('hotel','resort','heritage','casino','sogo') NOT NULL DEFAULT 'hotel',
+  `category_display` varchar(120) NOT NULL,
+  `address` varchar(255) NOT NULL,
+  `city` varchar(80) NOT NULL,
+  `rating` decimal(3,2) DEFAULT 4.90,
+  `rating_count` int(11) DEFAULT 150,
+  `views_count` int(11) DEFAULT 450,
+  `total_booked` int(11) DEFAULT 18,
+  `price_from` decimal(10,2) NOT NULL,
+  `duration_label` varchar(32) DEFAULT 'night',
+  `lat` decimal(10,6) NOT NULL,
+  `lng` decimal(10,6) NOT NULL,
+  `image` varchar(500) NOT NULL,
+  `tags` text DEFAULT NULL,
+  `status_text` varchar(80) DEFAULT 'Rooms Available',
+  `status_badge` varchar(50) DEFAULT 'status-walkin',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `branch_name` varchar(120) NOT NULL DEFAULT 'Main Branch'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `hotels`
+--
+
+INSERT INTO `hotels` (`id`, `title`, `brand`, `category`, `category_display`, `address`, `city`, `rating`, `rating_count`, `views_count`, `total_booked`, `price_from`, `duration_label`, `lat`, `lng`, `image`, `tags`, `status_text`, `status_badge`, `created_at`, `branch_name`) VALUES
+('hotel-conrad', 'Conrad Manila', 'Hilton Worldwide', 'hotel', 'Luxury Waterfront Hotel', 'Seaside Blvd cor Coral Way, Mall of Asia Complex, Pasay City', 'Pasay & Manila Bay', 4.88, 0, 1, 0, 10500.00, 'night', 14.532350, 120.981540, 'https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?auto=format&fit=crop&w=800&q=80', 'Direct MOA Bridge, Sunset Bay Terrace, Infinity Pool, C Lounge', 'Rooms Available (4 Suites)', 'status-walkin', '2026-09-29 14:02:10', 'Mall of Asia Complex Branch'),
+('hotel-grand-hyatt', 'Grand Hyatt Manila', 'Hyatt Hotels', 'hotel', '5-Star Ultra Luxury', '8th Avenue cor 35th Street, Bonifacio Global City, Taguig', 'BGC Taguig', 4.94, 0, 4, 0, 13500.00, 'night', 14.557420, 121.052810, 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=800&q=80', 'Tallest Tower in PH, The Peak 60th Floor, Floor-to-Ceiling Glass', 'Rooms Available (4 Suites)', 'status-walkin', '2026-09-29 14:02:10', 'Uptown BGC Branch'),
+('hotel-manila-hotel', 'The Manila Hotel', 'Historic Landmark Hotels', 'heritage', 'Historic 5-Star Heritage Hotel', 'One Rizal Park, Ermita, Historic District, Manila', 'Historic Manila', 4.86, 0, 1, 0, 7800.00, 'night', 14.582820, 120.975410, 'https://images.unsplash.com/photo-1445019980597-93fa8acb246c?auto=format&fit=crop&w=800&q=80', 'Historic 1912 Landmark, MacArthur Suite, Champagne Room, Bayfront', 'Rooms Available (4 Suites)', 'status-walkin', '2026-09-29 14:02:10', 'Historic Rizal Park Branch'),
+('hotel-okada', 'Okada Manila', 'Tiger Resort Leisure', 'casino', 'Integrated Casino Resort', 'New Seaside Drive, Entertainment City, Parañaque, Manila Bay', 'Entertainment City', 4.89, 0, 1, 0, 11800.00, 'night', 14.515250, 120.981840, 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=800&q=80', 'The Fountain Show, Cove Manila, Jet Pool, Bay Balcony', 'Rooms Available (4 Suites)', 'status-walkin', '2026-09-29 14:02:10', 'Entertainment City Flagship Branch'),
+('hotel-peninsula', 'The Peninsula Manila', 'The Peninsula Hotels', 'hotel', 'Luxury 5-Star Hotel', 'Corner of Ayala & Makati Avenues, Makati City', 'Makati CBD', 4.95, 0, 7, 0, 12500.00, 'night', 14.555280, 121.025620, 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80', 'The Lobby, Salon de Ning, Spa & Wellness, Pool, Butler Service', 'Rooms Available (6 Suites)', 'status-walkin', '2026-09-29 14:02:10', 'Makati Flagship Branch'),
+('hotel-shangrila-edsa', 'Edsa Shangri-La, Manila', 'Shangri-La Hotels & Resorts', 'hotel', 'Urban Oasis Resort', '1 Garden Way, Ortigas Center, Mandaluyong City', 'Ortigas Center', 4.88, 0, 1, 0, 9800.00, 'night', 14.581560, 121.055820, 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=800&q=80', 'Tropical Lagoon Pool, Chi Spa, Direct Mall Walkway, HEAT Buffet', 'Rooms Available (4 Suites)', 'status-walkin', '2026-09-29 14:02:10', 'Ortigas Center Branch'),
+('hotel-shangrila-fort', 'Shangri-La The Fort, Manila', 'Shangri-La Hotels & Resorts', 'hotel', '5-Star Ultra Luxury', '30th Street cor 5th Avenue, Bonifacio Global City, Taguig', 'BGC Taguig', 4.93, 0, 1, 0, 14200.00, 'night', 14.551820, 121.047530, 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=800&q=80', 'Kerry Sports, Horizon Club, High Street Views, Signature Dining', 'Rooms Available (5 Suites)', 'status-walkin', '2026-09-29 14:02:10', 'Bonifacio Global City Branch'),
+('hotel-shangrila-mactan', 'Shangri-La Mactan, Cebu', 'Shangri-La Hotels & Resorts', 'resort', '5-Star Beach Resort', 'Punta Engaño Road, Lapu-Lapu City, Mactan, Cebu', 'Cebu & Mactan', 4.96, 0, 19, 0, 15500.00, 'night', 10.303210, 124.020540, 'https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=800&q=80', 'Private White Beach, Marine Sanctuary, CHI Spa, Ocean Wing Privileges', 'Rooms Available (4 Suites)', 'status-walkin', '2026-09-29 14:02:10', 'Mactan Island Resort Branch'),
+('hotel-shangrila-makati', 'Makati Shangri-La, Manila', 'Shangri-La Hotels & Resorts', 'hotel', 'Luxury 5-Star Hotel', 'Ayala Avenue corner Makati Avenue, Makati City', 'Makati CBD', 4.90, 0, 1, 0, 11500.00, 'night', 14.553950, 121.024720, 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=800&q=80', 'Shang Palace, Circles Lounge, Outdoor Tennis, Spa', 'Rooms Available (4 Suites)', 'status-walkin', '2026-09-29 14:02:10', 'Ayala Center Branch'),
+('hotel-sofitel', 'Sofitel Philippine Plaza Manila', 'Accor Hotels', 'resort', 'Luxury Waterfront Resort', 'CCP Complex, Roxas Boulevard, Pasay City', 'Pasay & Manila Bay', 4.87, 0, 1, 0, 9200.00, 'night', 14.553910, 120.980240, 'https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=800&q=80', 'Spiral Dining, Lagoon Freeform Pool, Sunset Bar, Manila Bay', 'Rooms Available (4 Suites)', 'status-walkin', '2026-09-29 14:02:10', 'CCP Complex Branch'),
+('hotel-solaire', 'Solaire Resort & Casino', 'Bloomberry Resorts', 'casino', 'Integrated Casino Resort', '1 Aseana Avenue, Entertainment City, Parañaque, Manila Bay', 'Entertainment City', 4.91, 0, 2, 0, 13000.00, 'night', 14.526840, 120.980620, 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=800&q=80', 'The Theater, Bayview Pool, Fine Dining, Luxury VIP Gaming', 'Rooms Available (4 Suites)', 'status-walkin', '2026-09-29 14:02:10', 'Entertainment City Branch'),
+('hotel-solaire-north', 'Solaire Resort North', 'Bloomberry Resorts', 'casino', 'Integrated Casino Resort', '1 Solaire Way, Bagong Bantay, Quezon City, Metro Manila', 'Quezon City', 4.92, 0, 1, 0, 12000.00, 'night', 14.654850, 121.033420, 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=800&q=80', 'Sky Gaming, Gourmet Dining, Luxury Spa, Grand Ballroom', 'Rooms Available (4 Suites)', 'status-walkin', '2026-09-29 14:02:10', 'Quezon City Branch'),
+('sogo-alabang-south', 'Hotel Sogo - Alabang', 'Hotel Sogo', 'sogo', 'Japanese-Themed Hotel', 'Montillano Street, Alabang, Muntinlupa City', 'Alabang Muntinlupa', 4.64, 0, 0, 0, 1290.00, 'night', 14.421630, 121.043620, 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=800&q=80', 'South Station Transport Hub, Near Filinvest City, SLEX Access, So Clean So Good', 'Rooms Available (3 Suites)', 'status-walkin', '2026-09-29 14:02:10', 'South Station Alabang Branch'),
+('sogo-baguio', 'Hotel Sogo - Baguio', 'Hotel Sogo', 'sogo', 'Japanese-Themed Hotel', 'Harrison Road, Baguio City, Benguet (Across Burnham Park)', 'Baguio City', 4.75, 0, 6, 0, 1450.00, 'night', 16.412430, 120.596040, 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=800&q=80', 'Burnham Park View, Baguio Night Market, Mountain Breeze, So Clean So Good', 'Rooms Available (4 Suites)', 'status-walkin', '2026-09-29 14:02:10', 'Harrison Road Baguio Branch'),
+('sogo-bicol-naga', 'Hotel Sogo - Naga City', 'Hotel Sogo', 'sogo', 'Japanese-Themed Hotel', 'Diversion Road, Roxas Ave., Naga City, Camarines Sur', 'Naga City Bicol', 4.63, 0, 1, 0, 1100.00, 'night', 13.621210, 123.194520, 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=800&q=80', 'Heart of Bicol, Near Bus Terminal, Mount Isarog Breeze, So Clean So Good', 'Rooms Available (3 Suites)', 'status-walkin', '2026-09-29 14:02:10', 'Naga City Bicol Branch'),
+('sogo-cdo-recto', 'Hotel Sogo - Cagayan de Oro', 'Hotel Sogo', 'sogo', 'Japanese-Themed Hotel', 'C.M. Recto Ave., Lapasan, Cagayan de Oro City', 'Cagayan de Oro', 4.65, 0, 0, 0, 1150.00, 'night', 8.485520, 124.656510, 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=800&q=80', 'City of Golden Friendship, Near Limketkai Center, Fast Wi-Fi, 24/7 Security', 'Rooms Available (3 Suites)', 'status-walkin', '2026-09-29 14:02:10', 'CDO Lapasan Branch'),
+('sogo-cebu-sanciangko', 'Hotel Sogo - Cebu', 'Hotel Sogo', 'sogo', 'Japanese-Themed Hotel', 'Sanciangko St. corner Pelaez St., Cebu City', 'Cebu City', 4.66, 0, 0, 0, 1150.00, 'night', 10.300520, 123.896710, 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=800&q=80', 'Queen City of the South, Near Colon & Fuente, Free Wi-Fi, 24h Food Service', 'Rooms Available (4 Suites)', 'status-walkin', '2026-09-29 14:02:10', 'Cebu City Sanciangko Branch'),
+('sogo-cubao-aurora', 'Hotel Sogo - Cubao', 'Hotel Sogo', 'sogo', 'Japanese-Themed Hotel', 'Aurora Blvd cor. EDSA, Cubao, Quezon City', 'Cubao Quezon City', 4.65, 0, 0, 0, 1250.00, 'night', 14.621940, 121.052630, 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=800&q=80', 'So Clean So Good, 24h Food Service, Cable TV, Free Wi-Fi, Japanese Decor', 'Rooms Available (5 Suites)', 'status-walkin', '2026-09-29 14:02:10', 'Aurora Boulevard Branch'),
+('sogo-davao-castillo', 'Hotel Sogo - Davao', 'Hotel Sogo', 'sogo', 'Japanese-Themed Hotel', 'R. Castillo Street, Agdao, Davao City', 'Davao City', 4.69, 0, 0, 0, 1180.00, 'night', 7.087410, 125.626830, 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=800&q=80', 'King City of the South, Near Airport & Port, 24h Dining, CCTV Secured', 'Rooms Available (3 Suites)', 'status-walkin', '2026-09-29 14:02:10', 'Davao City R. Castillo Branch'),
+('sogo-makati-guadalupe', 'Hotel Sogo - Makati', 'Hotel Sogo', 'sogo', 'Japanese-Themed Hotel', 'EDSA Guadalupe Nuevo, Makati City', 'Makati CBD', 4.68, 0, 0, 0, 1350.00, 'night', 14.567210, 121.044810, 'https://images.unsplash.com/photo-1595576508898-0ad5c879a061?auto=format&fit=crop&w=800&q=80', 'Near BGC & Makati CBD, MRT Guadalupe Access, 24/7 Security, Free Wi-Fi', 'Rooms Available (4 Suites)', 'status-walkin', '2026-09-29 14:02:10', 'Guadalupe EDSA Branch'),
+('sogo-manila-avenida', 'Hotel Sogo - Avenida', 'Hotel Sogo', 'sogo', 'Japanese-Themed Hotel', 'Rizal Ave. cor. C.M. Recto Ave., Santa Cruz, Manila', 'Historic Manila', 4.59, 0, 0, 0, 1180.00, 'night', 14.603310, 120.982230, 'https://images.unsplash.com/photo-1445019980597-93fa8acb246c?auto=format&fit=crop&w=800&q=80', 'University Belt Manila, Near LRT Doroteo Jose, So Clean So Good, 24h Food', 'Rooms Available (3 Suites)', 'status-walkin', '2026-09-29 14:02:10', 'Rizal Avenue Recto Branch'),
+('sogo-manila-malate', 'Hotel Sogo - Malate', 'Hotel Sogo', 'sogo', 'Japanese-Themed Hotel', 'A. Mabini St. corner Remedios St., Malate, Manila', 'Historic Manila', 4.62, 0, 0, 0, 1200.00, 'night', 14.571430, 120.985820, 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=800&q=80', 'Near Manila Bay Sunset, Remedios Circle, Historic District, 24h Cafe', 'Rooms Available (3 Suites)', 'status-walkin', '2026-09-29 14:02:10', 'Mabini Malate Branch'),
+('sogo-pampanga-sanfernando', 'Hotel Sogo - Pampanga', 'Hotel Sogo', 'sogo', 'Japanese-Themed Hotel', 'Jose Abad Santos Avenue, City of San Fernando, Pampanga', 'San Fernando Pampanga', 4.63, 0, 0, 0, 1200.00, 'night', 15.045210, 120.690820, 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80', 'Culinary Capital of PH, Near SM Pampanga, Clark Access, Clean & Safe', 'Rooms Available (3 Suites)', 'status-walkin', '2026-09-29 14:02:10', 'San Fernando Pampanga Branch'),
+('sogo-pasay-rotonda', 'Hotel Sogo - Pasay', 'Hotel Sogo', 'sogo', 'Japanese-Themed Hotel', 'EDSA corner Taft Avenue, Pasay City', 'Pasay City', 4.60, 0, 0, 0, 1280.00, 'night', 14.537620, 121.001420, 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80', 'Near MRT/LRT Pasay, Airport Transit Ready, So Clean So Good, 24h Check-in', 'Rooms Available (5 Suites)', 'status-walkin', '2026-09-29 14:02:10', 'Pasay Rotonda Branch'),
+('sogo-qc-avenue', 'Hotel Sogo - Quezon Avenue', 'Hotel Sogo', 'sogo', 'Japanese-Themed Hotel', 'Quezon Avenue corner Roces Avenue, Quezon City', 'Quezon City', 4.67, 0, 0, 0, 1250.00, 'night', 14.636620, 121.026410, 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=800&q=80', 'Near Timog & Tomas Morato, Food Hub, High Speed Fiber, Secure Parking', 'Rooms Available (3 Suites)', 'status-walkin', '2026-09-29 14:02:10', 'Quezon Avenue Branch'),
+('sogo-qc-balintawak', 'Hotel Sogo - Balintawak', 'Hotel Sogo', 'sogo', 'Japanese-Themed Hotel', 'EDSA, Balintawak, Bgy. Apolonio Samson, Quezon City', 'Quezon City', 4.61, 0, 0, 0, 1190.00, 'night', 14.657510, 121.002820, 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=800&q=80', 'NLEX Gateway, Near LRT Balintawak, Highway Express Transit, Clean Rooms', 'Rooms Available (3 Suites)', 'status-walkin', '2026-09-29 14:02:10', 'North EDSA Balintawak Branch'),
+('sogo-qc-fairview', 'Hotel Sogo - Fairview', 'Hotel Sogo', 'sogo', 'Japanese-Themed Hotel', 'Quirino Highway, Greater Lagro, Novaliches, Quezon City', 'Novaliches QC', 4.62, 0, 0, 0, 1200.00, 'night', 14.717520, 121.064510, 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=800&q=80', 'Near SM Fairview & Robinsons Novaliches, Free Parking, Safe & Clean', 'Rooms Available (3 Suites)', 'status-walkin', '2026-09-29 14:02:10', 'Fairview Novaliches Branch');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `hotel_rooms`
+--
+
+CREATE TABLE `hotel_rooms` (
+  `id` varchar(64) NOT NULL,
+  `hotel_id` varchar(64) NOT NULL,
+  `room_number` varchar(30) NOT NULL DEFAULT '',
+  `room_name` varchar(255) NOT NULL,
+  `room_type` varchar(80) NOT NULL,
+  `price` decimal(10,2) NOT NULL,
+  `capacity` varchar(100) NOT NULL DEFAULT '2 Adults',
+  `bed_type` varchar(100) NOT NULL DEFAULT '1 King Bed',
+  `size_sqm` int(11) NOT NULL DEFAULT 45,
+  `amenities` text DEFAULT NULL,
+  `status` varchar(50) DEFAULT 'Available',
+  `total_booked` int(11) DEFAULT 5,
+  `image` varchar(500) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `hotel_rooms`
+--
+
+INSERT INTO `hotel_rooms` (`id`, `hotel_id`, `room_number`, `room_name`, `room_type`, `price`, `capacity`, `bed_type`, `size_sqm`, `amenities`, `status`, `total_booked`, `image`, `created_at`) VALUES
+('rm-conrad-301', 'hotel-conrad', 'Room 301', 'King Deluxe Bay View Room', 'Deluxe Room', 10500.00, '2 Adults', '1 King Bed', 40, 'Direct Manila Bay Sunset, Hydrotherapy Rain Shower, Motion Sensing A/C, Smart TV', 'Available', 0, 'https://images.unsplash.com/photo-1616046229478-9901c5536a45?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-conrad-302', 'hotel-conrad', 'Room 302', 'Twin Deluxe Bay View Room', 'Deluxe Room', 10500.00, '2 Adults', '2 Double Beds', 40, 'Manila Bay Sunset View, Rain Shower, Hydrotherapy Bath, High-Speed Wi-Fi', 'Available', 0, 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-conrad-501', 'hotel-conrad', 'Suite 501', 'Executive King Suite with Lounge', 'Executive Suite', 17500.00, '2 Adults', '1 King Bed', 65, 'Executive Lounge Privileges, Private Balcony, Espresso Machine, Free Breakfast', 'Available', 0, 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-conrad-701', 'hotel-conrad', 'Suite 701', 'Presidential Waterfront Suite', 'Presidential Suite', 48000.00, '4 Adults', '2 King Bedrooms', 170, 'Unobstructed Harbor Panorama, Dining Room, Kitchen, Private Butler, Sun Terrace', 'Under Maintenance', 0, 'https://images.unsplash.com/photo-1584132967334-10e028bd69f7?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-hyatt-2101', 'hotel-grand-hyatt', 'Room 2101', 'Grand King Skyline View', 'Deluxe Room', 13500.00, '2 Adults', '1 King Bed', 48, 'Floor-to-Ceiling Windows, High-Floor 40th+ Floor Vista, Japanese Bidet, Deep Tub', 'Available', 0, 'https://images.unsplash.com/photo-1595576508898-0ad5c879a061?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-hyatt-2102', 'hotel-grand-hyatt', 'Room 2102', 'Grand Twin Skyline View', 'Deluxe Room', 13500.00, '2 Adults', '2 Single Beds', 48, 'Floor-to-Ceiling Windows, Japanese Bidet, Deep Tub, Illy Espresso Machine', 'Available', 0, 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-hyatt-3301', 'hotel-grand-hyatt', 'Suite 3301', 'Grand Club Luxury Suite', 'Club Suite', 21000.00, '2 Adults, 1 Child', '1 King Bed', 78, 'Grand Club Access, All-Day Refreshments & Hors d’oeuvres, Walk-in Closet', 'Occupied', 0, 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-hyatt-5801', 'hotel-grand-hyatt', 'Penthouse 5801', 'Diplomatic Skyline Penthouse', 'Diplomatic Suite', 42000.00, '3 Adults', '1 King Bed', 140, '60th Floor Panoramic BGC View, Dining Room, Kitchenette, Marble Steam Bath', 'Available', 0, 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-manila-101', 'hotel-manila-hotel', 'Room 101', 'Grand Deluxe Heritage King', 'Heritage Room', 7800.00, '2 Adults', '1 King Bed', 44, 'Handcrafted Philippine Narra Wood, Capiz Shell Accents, Marble Bath, Historic View', 'Available', 0, 'https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-manila-102', 'hotel-manila-hotel', 'Room 102', 'Grand Deluxe Heritage Twin', 'Heritage Room', 7800.00, '2 Adults', '2 Single Beds', 44, 'Authentic Narra Wood, Capiz Shell Accents, Deep Soaking Tub, Free Wi-Fi', 'Available', 0, 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-manila-201', 'hotel-manila-hotel', 'Suite 201', 'Sunset Bayfront Suite', 'Bayfront Suite', 14500.00, '2 Adults, 1 Child', '1 King Bed', 75, 'Historic Manila Bayfront Balcony, Living Salon, Free Heritage Afternoon Tea', 'Occupied', 0, 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-manila-301', 'hotel-manila-hotel', 'Suite 301', 'Gen. Douglas MacArthur Suite', 'Historic Suite', 38000.00, '4 Adults', '2 Bedrooms Master Suite', 150, 'Authentic Historic Memorabilia, Vintage Narra Desk, Private Bar, Full Butler Service', 'Reserved', 0, 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-okada-1101', 'hotel-okada', 'Villa 1101', 'Manila Bay Villa with Plunge Pool', 'Luxury Villa', 55000.00, '4 Adults', '2 King Bedrooms', 250, 'Private Outdoor Plunge Pool, Private Spa Treatment Room, Bar Counter, 24h Butler', 'Reserved', 0, 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-okada-501', 'hotel-okada', 'Room 501', 'Grand Deluxe Fountain View Room', 'Deluxe Room', 11800.00, '2 Adults', '1 King Bed', 60, 'Direct View of The Fountain, King-size Jacuzzi Tub, Digital iPad Automation, Rain Shower', 'Available', 0, 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-okada-502', 'hotel-okada', 'Room 502', 'Grand Deluxe Fountain View Twin', 'Deluxe Room', 11800.00, '2 Adults', '2 Double Beds', 60, 'Fountain Light Show View, Jet Tub, iPad Automation, Marble Bathroom', 'Available', 0, 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-okada-801', 'hotel-okada', 'Suite 801', 'Junior Suite Manila Bay Sunset', 'Junior Suite', 18200.00, '2 Adults, 1 Child', '1 King Bed', 80, 'Manila Bay Sunset Balcony, Living Area, Gold-Accented Marble Bath, Sound System', 'Occupied', 0, 'https://images.unsplash.com/photo-1584132967334-10e028bd69f7?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-pen-101', 'hotel-peninsula', 'Room 101', 'Superior King Room', 'Deluxe Room', 12500.00, '2 Adults', '1 King Bed', 42, 'City Skyline View, Marble Bath, Deep Soaking Tub, High-Speed Wi-Fi, Nespresso Bar', 'Available', 0, 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-pen-102', 'hotel-peninsula', 'Room 102', 'Superior Twin Room', 'Deluxe Room', 12500.00, '2 Adults', '2 Single Beds', 42, 'Ayala Avenue View, Marble Bath, High-Speed Wi-Fi, 24/7 Room Service', 'Occupied', 0, 'https://images.unsplash.com/photo-1595576508898-0ad5c879a061?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-pen-201', 'hotel-peninsula', 'Room 201', 'Deluxe King Executive Suite', 'Executive Suite', 15800.00, '2 Adults, 1 Child', '1 King Bed', 55, 'Executive Club Access, Free Daily High Tea, Marble Bathroom, Walk-In Closet', 'Available', 0, 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-pen-202', 'hotel-peninsula', 'Room 202', 'Deluxe Twin Executive Suite', 'Executive Suite', 15800.00, '2 Adults, 1 Child', '2 Queen Beds', 55, 'Executive Club Access, Free Daily High Tea, Marble Bathroom, Walk-In Closet', 'Available', 0, 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-pen-301', 'hotel-peninsula', 'Suite 301', 'Premier Corner Makati Suite', 'Premier Suite', 24500.00, '3 Adults', '1 King Bed', 88, 'Ayala Triangle Panorama, Separate Living Room, Guest Powder Room, 24/7 Butler Service', 'Occupied', 0, 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-pen-501', 'hotel-peninsula', 'Suite 501', 'The Peninsula Presidential Suite', 'Presidential Suite', 68000.00, '4 Adults', '1 Grand Master King Bed', 210, 'Private Terrace, Grand Piano, Dining Room for 10, Whirlpool Jacuzzi, Private Chef Service', 'Reserved', 0, 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sg-alb-101', 'sogo-alabang-south', 'Room 101', 'Premium Double Room', 'Premium Room', 1290.00, '2 Adults', '1 Queen Bed', 22, 'Aircon, Wi-Fi, Hot Shower, Flat Screen Cable TV, 24/7 Room Service', 'Available', 0, 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sg-alb-201', 'sogo-alabang-south', 'Room 201', 'Deluxe King Room', 'Deluxe Room', 1690.00, '2 Adults', '1 King Bed', 28, 'Japanese Zen Motif, Mini Refrigerator, Work Desk, En Suite Bathroom', 'Available', 0, 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sg-alb-301', 'sogo-alabang-south', 'Suite 301', 'Regency Jacuzzi Room', 'Regency Suite', 2490.00, '2 Adults', '1 King Bed', 40, 'Large In-Room Whirlpool Tub, Ambient Lighting, Bluetooth Sound System', 'Occupied', 0, 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sg-ave-101', 'sogo-manila-avenida', 'Room 101', 'Standard Double Room', 'Standard Room', 1180.00, '2 Adults', '1 Double Bed', 20, 'Air Conditioning, Free Wi-Fi, Cable TV, Private Bath, Clean Towels & Kit', 'Available', 0, 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sg-ave-201', 'sogo-manila-avenida', 'Room 201', 'Deluxe Double Room', 'Deluxe Room', 1580.00, '2 Adults', '1 Queen Bed', 26, 'Cozy Seating, Smart LED TV, Fast Internet, Hot & Cold Rain Shower', 'Available', 0, 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sg-ave-301', 'sogo-manila-avenida', 'Suite 301', 'Executive Suite with Tub', 'Executive Suite', 2180.00, '2 Adults', '1 King Bed', 35, 'Deep Soaking Bathtub, Spacious Living Area, Free Coffee, Toiletries', 'Available', 0, 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sg-bag-101', 'sogo-baguio', 'Room 101', 'Pine View Premium Room', 'Premium Room', 1450.00, '2 Adults', '1 Queen Bed', 24, 'Heated Shower System, Burnham Park Breeze, Cable TV, High-Speed Wi-Fi', 'Available', 0, 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sg-bag-102', 'sogo-baguio', 'Room 102', 'Pine View Twin Room', 'Premium Room', 1500.00, '2 Adults', '2 Single Beds', 24, 'Heated Rain Shower, Electric Kettle with Baguio Coffee, Free Wi-Fi', 'Available', 0, 'https://images.unsplash.com/photo-1595576508898-0ad5c879a061?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sg-bag-201', 'sogo-baguio', 'Room 201', 'Deluxe Mountain Queen', 'Deluxe Room', 1850.00, '2 Adults', '1 Queen Bed', 30, 'Warm Wood Finish, Cozy Sofa, Mountain Skyline, Coffee Bar', 'Occupied', 0, 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sg-bag-301', 'sogo-baguio', 'Suite 301', 'Regency Jacuzzi Mountain Suite', 'Regency Suite', 2850.00, '2 Adults', '1 King Bed', 45, 'Hot Hydro Jacuzzi Tub, Panoramic Window Overlooking Burnham Park, Heated Bath', 'Available', 0, 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sg-bal-101', 'sogo-qc-balintawak', 'Room 101', 'Premium Double Room', 'Premium Room', 1190.00, '2 Adults', '1 Queen Bed', 21, 'Aircon, Cable TV with Movie Channels, Wi-Fi, Hot Shower, Soap & Shampoo', 'Available', 0, 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sg-bal-201', 'sogo-qc-balintawak', 'Room 201', 'Deluxe King Room', 'Deluxe Room', 1590.00, '2 Adults', '1 King Bed', 27, 'Comfortable King Mattress, Work Desk, Smart TV, Free Breakfast', 'Available', 0, 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sg-bal-301', 'sogo-qc-balintawak', 'Suite 301', 'Executive Jacuzzi Suite', 'Executive Suite', 2390.00, '2 Adults', '1 King Bed', 38, 'In-Room Jacuzzi, Bathrobe, Mini Fridge, Ambient Mood Lights', 'Available', 0, 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sg-cdo-101', 'sogo-cdo-recto', 'Room 101', 'Premium Queen Room', 'Premium Room', 1150.00, '2 Adults', '1 Queen Bed', 22, 'Silent A/C, Hot Shower, Cable TV, High-Speed Wi-Fi, Sanitized Beds', 'Available', 0, 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sg-cdo-201', 'sogo-cdo-recto', 'Room 201', 'Deluxe King Room', 'Deluxe Room', 1550.00, '2 Adults', '1 King Bed', 28, 'Japanese Clean Lines, Work Table, Smart TV, Free Breakfast Choice', 'Available', 0, 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sg-cdo-301', 'sogo-cdo-recto', 'Suite 301', 'Regency Jacuzzi Room', 'Regency Suite', 2350.00, '2 Adults', '1 King Bed', 40, 'Hydro Jacuzzi, Custom Lighting, Plush Robes, Slippers & Vanity Set', 'Available', 0, 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sg-ceb-101', 'sogo-cebu-sanciangko', 'Room 101', 'Premium Queen Room', 'Premium Room', 1150.00, '2 Adults', '1 Queen Bed', 22, 'Aircon, Cable TV, Hot Shower, Free Wi-Fi, 24/7 Security and Room Service', 'Available', 0, 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sg-ceb-102', 'sogo-cebu-sanciangko', 'Room 102', 'Premium Twin Room', 'Premium Room', 1200.00, '2 Adults', '2 Single Beds', 23, 'Modern Japanese Design, Desk, High-Speed Internet, Hot Water Rain Shower', 'Available', 0, 'https://images.unsplash.com/photo-1595576508898-0ad5c879a061?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sg-ceb-201', 'sogo-cebu-sanciangko', 'Room 201', 'Deluxe Double Room', 'Deluxe Room', 1550.00, '2 Adults', '1 King Bed', 28, 'Clean Wood Interior, 50-inch Smart TV, Refrigerator, Complimentary Coffee', 'Occupied', 0, 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sg-ceb-301', 'sogo-cebu-sanciangko', 'Suite 301', 'Regency Jacuzzi Suite', 'Regency Suite', 2350.00, '2 Adults', '1 King Bed', 40, 'In-Room Hydrotherapy Jacuzzi, Relaxing Ambiance, Bathrobes, Free Breakfast', 'Available', 0, 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sg-cubao-101', 'sogo-cubao-aurora', 'Room 101', 'Premium Double Room', 'Premium Room', 1250.00, '2 Adults', '1 Queen Bed', 22, 'Air Conditioning, Free High-Speed Wi-Fi, LED TV with Cable Channels, Private Hot Shower', 'Available', 0, 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sg-cubao-102', 'sogo-cubao-aurora', 'Room 102', 'Premium Twin Room', 'Premium Room', 1350.00, '2 Adults', '2 Single Beds', 24, 'Japanese Wood Trim, 43-inch Smart TV, 24/7 Room Service, Hot & Cold Shower', 'Available', 0, 'https://images.unsplash.com/photo-1595576508898-0ad5c879a061?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sg-cubao-201', 'sogo-cubao-aurora', 'Room 201', 'Deluxe King Room', 'Deluxe Room', 1650.00, '2 Adults', '1 King Bed', 28, 'Spacious Work Desk, Refrigerator, Japanese Shoji Screens, Ambient Lighting', 'Occupied', 0, 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sg-cubao-301', 'sogo-cubao-aurora', 'Room 301', 'Executive Suite with Bathtub', 'Executive Suite', 1950.00, '2 Adults', '1 King Bed', 34, 'Separate Lounge Area, Deep Soaking Tub, Robes & Slippers, Free Bottled Water', 'Available', 0, 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sg-cubao-401', 'sogo-cubao-aurora', 'Suite 401', 'Regency Jacuzzi Suite', 'Regency Suite', 2450.00, '2 Adults', '1 Luxury King Bed', 42, 'Private In-Room Jacuzzi Whirlpool, Bluetooth Sound, Mood Lighting, Dining Counter', 'Available', 0, 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sg-dav-101', 'sogo-davao-castillo', 'Room 101', 'Premium Queen Room', 'Premium Room', 1180.00, '2 Adults', '1 Queen Bed', 22, 'Silent Split A/C, Cable TV, Hot & Cold Shower, Fast Wi-Fi, Sanitized Beddings', 'Available', 0, 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sg-dav-201', 'sogo-davao-castillo', 'Room 201', 'Deluxe King Room', 'Deluxe Room', 1580.00, '2 Adults', '1 King Bed', 28, 'Spacious Layout, Work Desk, Smart LED TV, In-Room Telephone', 'Available', 0, 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sg-dav-301', 'sogo-davao-castillo', 'Suite 301', 'Regency Jacuzzi Room', 'Regency Suite', 2380.00, '2 Adults', '1 King Bed', 42, 'Private Jacuzzi Whirlpool Tub, Ambient Lighting, Robes & Slippers', 'Available', 0, 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sg-fvw-101', 'sogo-qc-fairview', 'Room 101', 'Premium Queen Room', 'Premium Room', 1200.00, '2 Adults', '1 Queen Bed', 22, 'Aircon, Wi-Fi, Cable TV, Hot Shower, 24/7 Room Service', 'Available', 0, 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sg-fvw-201', 'sogo-qc-fairview', 'Room 201', 'Deluxe Double Room', 'Deluxe Room', 1600.00, '2 Adults', '1 King Bed', 28, 'Japanese Clean Design, Mini Fridge, Work Desk, En Suite Bath', 'Available', 0, 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sg-fvw-301', 'sogo-qc-fairview', 'Suite 301', 'Regency Jacuzzi Room', 'Regency Suite', 2400.00, '2 Adults', '1 King Bed', 40, 'Whirlpool Spa Tub, Ambient Mood Lights, Free Toiletries', 'Available', 0, 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sg-guad-101', 'sogo-makati-guadalupe', 'Room 101', 'Premium Room', 'Premium Room', 1350.00, '2 Adults', '1 Queen Bed', 23, 'Modern Zen Interior, Individual A/C, Cable TV, Fast Wi-Fi, Hot Shower', 'Available', 0, 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sg-guad-102', 'sogo-makati-guadalupe', 'Room 102', 'Premium Room', 'Premium Room', 1350.00, '2 Adults', '1 Queen Bed', 23, 'Individual Temperature Control, USB Charging Outlets, En Suite Shower', 'Occupied', 0, 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sg-guad-201', 'sogo-makati-guadalupe', 'Room 201', 'Deluxe Room with Sofa', 'Deluxe Room', 1750.00, '2 Adults', '1 King Bed', 29, 'Comfortable Sofa Seating, Refrigerator, Vanity Table, Bottled Water', 'Available', 0, 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sg-guad-301', 'sogo-makati-guadalupe', 'Suite 301', 'Regency Jacuzzi Room', 'Regency Suite', 2600.00, '2 Adults', '1 King Bed', 42, 'In-Room Hydrotherapy Jacuzzi, Bathrobes, Surround Sound, Romantic Lighting', 'Available', 0, 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sg-mal-101', 'sogo-manila-malate', 'Room 101', 'Economy Double Room', 'Economy Room', 1200.00, '2 Adults', '1 Double Bed', 20, 'Air Conditioning, Cable TV, Free Wi-Fi, Private Bath with Hot Water', 'Available', 0, 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sg-mal-201', 'sogo-manila-malate', 'Room 201', 'Deluxe Queen Room', 'Deluxe Room', 1550.00, '2 Adults', '1 Queen Bed', 26, 'Japanese Wooden Floors, 43-inch TV, Mini Bar, Fresh Linens Daily', 'Available', 0, 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sg-mal-301', 'sogo-manila-malate', 'Suite 301', 'Executive Jacuzzi Suite', 'Executive Suite', 2300.00, '2 Adults', '1 King Bed', 38, 'Private Corner Jacuzzi, Lounge Recliner, Free Breakfast, Hair Dryer', 'Available', 0, 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sg-nag-101', 'sogo-bicol-naga', 'Room 101', 'Premium Queen Room', 'Premium Room', 1100.00, '2 Adults', '1 Queen Bed', 21, 'Aircon, Wi-Fi, Cable TV, Hot Shower, Soap & Shampoo, 24/7 Room Service', 'Available', 0, 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sg-nag-201', 'sogo-bicol-naga', 'Room 201', 'Deluxe Double Room', 'Deluxe Room', 1500.00, '2 Adults', '1 King Bed', 27, 'Comfortable King Mattress, Desk, Smart TV, Mini Fridge', 'Available', 0, 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sg-nag-301', 'sogo-bicol-naga', 'Suite 301', 'Regency Jacuzzi Room', 'Regency Suite', 2250.00, '2 Adults', '1 King Bed', 38, 'In-Room Hydrotherapy Jacuzzi Tub, Relaxing Ambient Lights, Free Breakfast', 'Available', 0, 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sg-pam-101', 'sogo-pampanga-sanfernando', 'Room 101', 'Premium Queen Room', 'Premium Room', 1200.00, '2 Adults', '1 Queen Bed', 22, 'Cold A/C, Free Wi-Fi, Hot Shower, Cable Channels, 24/7 Room Service Menu', 'Available', 0, 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sg-pam-201', 'sogo-pampanga-sanfernando', 'Room 201', 'Deluxe Double Room', 'Deluxe Room', 1600.00, '2 Adults', '1 King Bed', 28, 'Japanese Zen Paneling, Work Desk, Refrigerator, Large Bathroom', 'Available', 0, 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sg-pam-301', 'sogo-pampanga-sanfernando', 'Suite 301', 'Regency Jacuzzi Room', 'Regency Suite', 2400.00, '2 Adults', '1 King Bed', 40, 'In-Room Jacuzzi Tub, Custom Mood LED Lighting, Free Breakfast', 'Available', 0, 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sg-pasay-101', 'sogo-pasay-rotonda', 'Room 101', 'Premium Queen Room', 'Premium Room', 1280.00, '2 Adults', '1 Queen Bed', 22, 'Aircon, Cable TV, Safe Box, En Suite Bathroom with Hot & Cold Rain Shower', 'Available', 0, 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sg-pasay-102', 'sogo-pasay-rotonda', 'Room 102', 'Premium Queen Room', 'Premium Room', 1280.00, '2 Adults', '1 Queen Bed', 22, 'Direct Rotonda View, Soundproof Glass, High-Speed Wi-Fi, Coffee/Tea Set', 'Occupied', 0, 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sg-pasay-201', 'sogo-pasay-rotonda', 'Room 201', 'Deluxe Double Room', 'Deluxe Room', 1680.00, '2 Adults', '1 Queen Bed', 28, 'Japanese Clean Aesthetics, Mini Fridge, 50-inch Smart LED TV, Work Desk', 'Available', 0, 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sg-pasay-301', 'sogo-pasay-rotonda', 'Room 301', 'Executive Suite', 'Executive Suite', 1980.00, '2 Adults, 1 Child', '1 King Bed', 36, 'Spacious Parlor, Leather Sofa, Deep Bath, Free Toiletries & Hair Dryer', 'Available', 0, 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sg-pasay-401', 'sogo-pasay-rotonda', 'Suite 401', 'Regency Room with Jacuzzi', 'Regency Suite', 2550.00, '2 Adults', '1 Luxury King Bed', 44, 'Private Hydro Jacuzzi Tub, Custom Mood LED Lighting, Free Breakfast Voucher', 'Reserved', 0, 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sg-qave-101', 'sogo-qc-avenue', 'Room 101', 'Premium Queen Room', 'Premium Room', 1250.00, '2 Adults', '1 Queen Bed', 22, 'Crisp Sanitized Linens, Individual Aircon, Flat Screen TV, Free Toiletries', 'Available', 0, 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sg-qave-201', 'sogo-qc-avenue', 'Room 201', 'Deluxe King Room', 'Deluxe Room', 1650.00, '2 Adults', '1 King Bed', 28, 'Japanese Zen Layout, Refrigerator, LED Lighting, 24/7 In-Room Dining', 'Occupied', 0, 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sg-qave-301', 'sogo-qc-avenue', 'Suite 301', 'Regency Jacuzzi Room', 'Regency Suite', 2450.00, '2 Adults', '1 King Bed', 40, 'Whirlpool Spa Tub, Bluetooth Entertainment, Robes, Free Welcome Drinks', 'Available', 0, 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-shang-1801', 'hotel-shangrila-fort', 'Room 1801', 'Deluxe High-Floor King Room', 'Deluxe Room', 14200.00, '2 Adults', '1 King Bed', 45, 'Floor-to-Ceiling BGC Skyline, Kerry Sports Access, Marble Rain Shower, Smart TV', 'Available', 0, 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-shang-1802', 'hotel-shangrila-fort', 'Room 1802', 'Deluxe High-Floor Twin Room', 'Deluxe Room', 14200.00, '2 Adults', '2 Single Beds', 45, 'High Street View, Marble Bathroom, Free High-Speed Wi-Fi, Coffee Machine', 'Available', 0, 'https://images.unsplash.com/photo-1595576508898-0ad5c879a061?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-shang-2501', 'hotel-shangrila-fort', 'Room 2501', 'Horizon Club Premier King', 'Club Room', 19500.00, '2 Adults', '1 King Bed', 56, 'Horizon Club Privileges, Sunset Cocktail Hours, Private Concierge, Deep Bath', 'Occupied', 0, 'https://images.unsplash.com/photo-1591088398332-8a7791972843?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-shang-3201', 'hotel-shangrila-fort', 'Suite 3201', 'One-Bedroom Fort Executive Suite', 'Executive Suite', 29000.00, '3 Adults', '1 King Bed + Sofa Bed', 95, 'High Street Corner Vista, Living & Dining Salon, Kitchenette, Dyson Hairdryer', 'Available', 0, 'https://images.unsplash.com/photo-1595576508898-0ad5c879a061?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-shang-4501', 'hotel-shangrila-fort', 'Penthouse 4501', 'Shangri-La Penthouse Suite', 'Presidential Suite', 75000.00, '4 Adults', '2 King Bedrooms', 240, '360 BGC Rooftop View, Private Sauna, 12-Seater Dining, 24h Dedicated Butler', 'Reserved', 0, 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-shangceb-101', 'hotel-shangrila-mactan', 'Room 101', 'Deluxe Ocean View King Room', 'Ocean Deluxe', 15500.00, '2 Adults', '1 King Bed', 48, 'Private Balcony overlooking Mactan Sea, Marble Bathroom, Free Snorkeling', 'Available', 0, 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-shangceb-102', 'hotel-shangrila-mactan', 'Room 102', 'Deluxe Ocean View Twin Room', 'Ocean Deluxe', 15500.00, '2 Adults', '2 Queen Beds', 48, 'Spectacular Sea Breeze View, Balcony, Rain Shower, Nespresso Bar', 'Available', 0, 'https://images.unsplash.com/photo-1595576508898-0ad5c879a061?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-shangceb-201', 'hotel-shangrila-mactan', 'Suite 201', 'Ocean Wing Panorama Suite', 'Panorama Suite', 27000.00, '3 Adults', '1 King Bed', 92, 'Panoramic 180 Ocean View, Outdoor Jacuzzi Balcony, Ocean Club Lounge Access', 'Occupied', 0, 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-shangceb-301', 'hotel-shangrila-mactan', 'Villa 301', 'Shangri-La Beachfront Villa', 'Luxury Beach Villa', 58000.00, '4 Adults', '2 King Bedrooms', 215, 'Private Plunge Pool, Direct Beach Access, Private Garden Cabana, 24h Butler', 'Available', 0, 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-shangedsa-401', 'hotel-shangrila-edsa', 'Room 401', 'Tower Wing Deluxe King', 'Deluxe Room', 9800.00, '2 Adults', '1 King Bed', 45, 'Lagoon Garden View, Marble Bath, Free Wi-Fi, Executive Desk', 'Available', 0, 'https://images.unsplash.com/photo-1595576508898-0ad5c879a061?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-shangedsa-402', 'hotel-shangrila-edsa', 'Room 402', 'Tower Wing Deluxe Twin', 'Deluxe Room', 9800.00, '2 Adults', '2 Double Beds', 45, 'City Skyline View, Marble Bathroom, 55-inch Smart TV', 'Available', 0, 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-shangedsa-601', 'hotel-shangrila-edsa', 'Room 601', 'Garden Wing Horizon Suite', 'Executive Suite', 16500.00, '2 Adults, 1 Child', '1 King Bed', 76, 'Private Balcony overlooking Tropical Garden, Horizon Club Lounge Access', 'Occupied', 0, 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-shangedsa-801', 'hotel-shangrila-edsa', 'Suite 801', 'Edsa Presidential Suite', 'Presidential Suite', 42000.00, '4 Adults', '2 King Bedrooms', 160, 'Panoramic Ortigas Skyline, Dining for 8, Private Spa Tub', 'Available', 0, 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-shangmak-301', 'hotel-shangrila-makati', 'Room 301', 'Deluxe King Room Ayala Vista', 'Deluxe Room', 11500.00, '2 Adults', '1 King Bed', 48, 'Ayala Center Panorama, Marble Bathroom with Separate Shower, Mini-Bar', 'Available', 0, 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-shangmak-302', 'hotel-shangrila-makati', 'Room 302', 'Deluxe Twin Room Ayala Vista', 'Deluxe Room', 11500.00, '2 Adults', '2 Single Beds', 48, 'Garden View, Marble Bath, High-Speed Wi-Fi, Executive Workspace', 'Available', 0, 'https://images.unsplash.com/photo-1595576508898-0ad5c879a061?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-shangmak-501', 'hotel-shangrila-makati', 'Room 501', 'Horizon Club Executive Suite', 'Club Suite', 18000.00, '2 Adults, 1 Child', '1 King Bed', 70, 'Horizon Club Privileges, Afternoon Tea, Cocktails, Large Living Room', 'Available', 0, 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-shangmak-701', 'hotel-shangrila-makati', 'Suite 701', 'Governor Suite', 'Presidential Suite', 45000.00, '4 Adults', '1 King Master Bedroom', 135, 'Dining Room, Kitchenette, Jacuzzi Tub, Butler Service', 'Under Maintenance', 0, 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sofitel-201', 'hotel-sofitel', 'Room 201', 'Superior Lagoon King Room', 'Resort Room', 9200.00, '2 Adults', '1 King Bed', 42, 'Private Balcony overlooking Lagoon Pool & Palms, French Lanvin Toiletries, Free Wi-Fi', 'Available', 0, 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sofitel-202', 'hotel-sofitel', 'Room 202', 'Superior Lagoon Twin Room', 'Resort Room', 9200.00, '2 Adults', '2 Queen Beds', 42, 'Balcony over Lagoon Pool, Lanvin Toiletries, Satellite Smart TV', 'Available', 0, 'https://images.unsplash.com/photo-1595576508898-0ad5c879a061?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sofitel-401', 'hotel-sofitel', 'Suite 401', 'Luxury Club Millesime Suite', 'Club Suite', 16000.00, '2 Adults', '1 King Bed', 70, 'Club Millesime Lounge, Gourmet Breakfast at Spiral, Evening French Wine & Cheese', 'Available', 0, 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sofitel-601', 'hotel-sofitel', 'Suite 601', 'Imperial Bay Presidential Suite', 'Presidential Suite', 52000.00, '4 Adults', '2 King Bedrooms', 190, 'Private Sunset Bay Terrace, Plunge Jacuzzi, Dining Room, 24/7 Dedicated Butler', 'Reserved', 0, 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sol-1401', 'hotel-solaire', 'Suite 1401', 'Chairman Sky Villa Suite', 'Presidential Suite', 62000.00, '4 Adults', '2 Master King Beds', 200, 'Private Karaoke Lounge, Bar & Wine Cellar, Whirlpool Jacuzzi, Dedicated Security', 'Reserved', 0, 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sol-601', 'hotel-solaire', 'Room 601', 'Deluxe Bay View King Room', 'Deluxe Room', 13000.00, '2 Adults', '1 King Bed', 43, 'Manila Bay Horizon, 350-Thread Count Linens, Italian Marble Bath, Espresso Machine', 'Available', 0, 'https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sol-602', 'hotel-solaire', 'Room 602', 'Deluxe City View Twin Room', 'Deluxe Room', 13000.00, '2 Adults', '2 Queen Beds', 43, 'Skyline Panorama, Italian Marble Bath, 60-inch HDTV, High-Speed Fiber', 'Available', 0, 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-sol-901', 'hotel-solaire', 'Suite 901', 'Grand Deluxe Ocean Suite', 'Ocean Suite', 22000.00, '3 Adults', '1 King Bed', 72, 'Panoramic Bay Window, Living Lounge, Deep Soaking Tub with Bay View, VIP Check-in', 'Available', 0, 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-solnorth-1201', 'hotel-solaire-north', 'Suite 1201', 'Executive Skyline Suite', 'Executive Suite', 19500.00, '2 Adults, 1 Child', '1 King Bed', 78, 'VIP Club Lounge, Free Breakfast, Separate Parlor and Powder Room', 'Occupied', 0, 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-solnorth-1801', 'hotel-solaire-north', 'Villa 1801', 'The North Penthouse Villa', 'Luxury Villa', 48000.00, '4 Adults', '2 Master Bedrooms', 185, 'Panoramic 360 North Metro View, Private Plunge Tub, Butler Service', 'Available', 0, 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-solnorth-801', 'hotel-solaire-north', 'Room 801', 'North Deluxe King Room', 'Deluxe Room', 12000.00, '2 Adults', '1 King Bed', 46, 'City Skyline View, Marble Bathroom, 65-inch Smart TV, High-Speed Fiber', 'Available', 0, 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10'),
+('rm-solnorth-802', 'hotel-solaire-north', 'Room 802', 'North Deluxe Twin Room', 'Deluxe Room', 12000.00, '2 Adults', '2 Double Beds', 46, 'Panoramic North Metro View, Rain Shower, Bluetooth Soundbar, Nespresso Bar', 'Available', 0, 'https://images.unsplash.com/photo-1595576508898-0ad5c879a061?auto=format&fit=crop&w=600&q=80', '2026-09-29 14:02:10');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL,
+  `full_name` varchar(150) NOT NULL,
+  `email` varchar(191) NOT NULL,
+  `password_hash` varchar(255) NOT NULL,
+  `role` varchar(20) DEFAULT 'user',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `is_verified` tinyint(1) DEFAULT 0,
+  `verification_code` varchar(10) DEFAULT NULL,
+  `verified_at` datetime DEFAULT NULL,
+  `phone` varchar(50) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `full_name`, `email`, `password_hash`, `role`, `created_at`, `is_verified`, `verification_code`, `verified_at`, `phone`) VALUES
+(2, 'Maria Santos', 'maria.santos@comfortvue.ph', '$2y$10$abcdefghijklmnopqrstuu', 'user', '2026-09-28 15:42:46', 1, '572910', '2026-09-28 11:30:00', '+63 920 555 1234'),
+(3, 'Alex Delacruz', 'alex.delacruz@gmail.com', 'OAUTH_GOOGLE', 'user', '2026-09-25 20:15:31', 1, '329595', '2026-09-30 01:32:58', NULL),
+(99, 'System Administrator', 'admin@comfortvue.ph', '$2y$10$WpvZth24ML8xlBEtNVnpMubYYHtI5p/iyBFUPvnq1dVgtEjWbK7Tq', 'admin', '2026-09-28 16:11:11', 1, '999999', '2026-09-29 00:11:11', '+63 917 000 0000'),
+(100, 'Rmaramba08', 'rmaramba08@gmail.com', 'OAUTH_GOOGLE', 'user', '2026-09-29 16:14:45', 1, NULL, '2026-09-30 00:14:45', NULL);
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `bookings`
+--
+ALTER TABLE `bookings`
+  ADD PRIMARY KEY (`booking_id`),
+  ADD KEY `session_id` (`session_id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `hotels`
+--
+ALTER TABLE `hotels`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `hotel_rooms`
+--
+ALTER TABLE `hotel_rooms`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `hotel_id` (`hotel_id`);
+
+--
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `email` (`email`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=101;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `hotel_rooms`
+--
+ALTER TABLE `hotel_rooms`
+  ADD CONSTRAINT `hotel_rooms_ibfk_1` FOREIGN KEY (`hotel_id`) REFERENCES `hotels` (`id`) ON DELETE CASCADE;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
